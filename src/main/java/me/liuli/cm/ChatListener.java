@@ -70,8 +70,7 @@ public class ChatListener implements Listener {
             msg= PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
             for(String words:ChatManager.banWords) {
                 //使用正则表达式进行判断
-                Pattern pattern = Pattern.compile(words);
-                if(pattern.matcher(msg).find()){
+                if(Pattern.compile(words).matcher(msg).find()){
                     event.setCancelled();
                     String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(words));
                     event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));

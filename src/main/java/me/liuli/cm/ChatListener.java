@@ -9,11 +9,15 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.network.protocol.TextPacket;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
     private final Map<UUID,Long> chatTime=new HashMap<>();
@@ -32,7 +36,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPacket(DataPacketReceiveEvent event){
+    public void onPacket(DataPacketReceiveEvent event) throws BadHanyuPinyinOutputFormatCombination {
         Player player=event.getPlayer();
         if(player==null){
             return;
@@ -63,9 +67,11 @@ public class ChatListener implements Listener {
             }
             chatMsg.put(uuid,msg);
 
-            msg=Pinyin.toPinyin(msg);
+            msg= PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
             for(String words:ChatManager.banWords) {
-                if(msg.contains(words)){
+                //使用正则表达式进行判断
+                Pattern pattern = Pattern.compile(words);
+                if(pattern.matcher(msg).find()){
                     event.setCancelled();
                     String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(words));
                     event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));

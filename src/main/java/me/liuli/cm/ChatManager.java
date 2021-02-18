@@ -2,6 +2,9 @@ package me.liuli.cm;
 
 import cn.nukkit.plugin.PluginBase;
 import com.alibaba.fastjson.JSONObject;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +21,12 @@ public class ChatManager extends PluginBase {
     public static ArrayList<String> oriBanWords;
     public static String bw_warn;
     public static ArrayList<String> ignore;
+
+    private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
+
+    public static HanyuPinyinOutputFormat getHanyuPinyinOutputFormat() {
+        return hanyuPinyinOutputFormat;
+    }
 
     @Override
     public void onEnable() {
@@ -43,8 +52,6 @@ public class ChatManager extends PluginBase {
                     OtherUtil.getTextFromResource("config.yml"));
         }
 
-        Pinyin.init();
-
         JSONObject configJSON=JSONObject.parseObject(OtherUtil.y2j(new File(this.getDataFolder().getPath()+"/config.yml")));
 
         delay=configJSON.getInteger("delay");
@@ -54,7 +61,11 @@ public class ChatManager extends PluginBase {
         oriBanWords=new ArrayList<>();
         for(Object words:configJSON.getJSONArray("banWords")){
             String word=((String) words).toLowerCase();
-            banWords.add(Pinyin.toPinyin(word));
+            try {
+                banWords.add(PinyinHelper.toHanYuPinyinString(word,hanyuPinyinOutputFormat,"",false));
+            } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+                badHanyuPinyinOutputFormatCombination.printStackTrace();
+            }
             oriBanWords.add(word);
         }
         bw_warn=configJSON.getString("bw_warn");

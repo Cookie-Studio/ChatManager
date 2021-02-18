@@ -1,0 +1,6 @@
+delay: 1500
+dl_warn: "You need wait 1.5 sec to chat again!"
+rp_warn: "You can not spamming message"
+banWords: ["傻逼","fuck","sb","nmsl","你妈","户籍"]
+bw_warn: "You have violated a prohibited word: %w%"
+ignore: [",","\\.","。","，",";"]

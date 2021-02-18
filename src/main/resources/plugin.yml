@@ -1,0 +1,6 @@
+name: ChatManager
+main: me.liuli.cm.ChatManager
+version: "1.0"
+author: liulihaocai
+api: ["1.0.0"]
+description: plugin

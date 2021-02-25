@@ -9,7 +9,6 @@ import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.network.protocol.TextPacket;
 import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,13 +67,16 @@ public class ChatListener implements Listener {
             }
             chatMsg.put(uuid,msg);
 
-            msg= PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
-            for(String words:ChatManager.banWords) {
-                //使用正则表达式进行判断
-                String wordsPy = PinyinHelper.toHanYuPinyinString(words,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
-                if(Pattern.compile(wordsPy).matcher(msg).find()){
+            String msgPy = PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
+            //获取玩家输入消息的拼音
+            for(String word:ChatManager.banWords) {
+                String wordPy = PinyinHelper.toHanYuPinyinString(word,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
+                //获取屏蔽词的拼音
+                if(msgPy.contains(wordPy)){//对比
+                    event.getPlayer().sendMessage("msgpy: " + msgPy);
+                    event.getPlayer().sendMessage("banwordpy: " + wordPy);
                     event.setCancelled();
-                    String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(words));
+                    String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(word));
                     event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));
                     return;
                 }

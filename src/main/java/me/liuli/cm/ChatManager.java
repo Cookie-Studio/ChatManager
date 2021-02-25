@@ -7,12 +7,12 @@ import cn.nukkit.scheduler.PluginTask;
 import com.alibaba.fastjson.JSONObject;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class ChatManager extends PluginBase {
     public static ChatManager plugin;
@@ -26,7 +26,12 @@ public class ChatManager extends PluginBase {
     public static ArrayList<String> ignore;
     public static HashMap<Player, Integer> muteTime = new HashMap<>();
 
-    private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
+    private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat;
+
+    static{
+        hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
+        hanyuPinyinOutputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+    }
 
     public static HanyuPinyinOutputFormat getHanyuPinyinOutputFormat() {
         return hanyuPinyinOutputFormat;

@@ -68,7 +68,7 @@ public class ChatManager extends PluginBase {
         for(Object words:configJSON.getJSONArray("banWords")){
             String word=((String) words).toLowerCase();
             try {
-                banWords.add(PinyinHelper.toHanYuPinyinString(word,hanyuPinyinOutputFormat,"",false));
+                banWords.add(PinyinHelper.toHanYuPinyinString(word,hanyuPinyinOutputFormat,"",true));
             } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
                 badHanyuPinyinOutputFormatCombination.printStackTrace();
             }

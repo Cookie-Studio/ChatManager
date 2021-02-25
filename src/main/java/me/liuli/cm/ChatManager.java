@@ -25,13 +25,7 @@ public class ChatManager extends PluginBase {
     public static String bw_warn;
     public static ArrayList<String> ignore;
     public static HashMap<Player, Integer> muteTime = new HashMap<>();
-
     private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat;
-
-    static{
-        hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
-        hanyuPinyinOutputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-    }
 
     public static HanyuPinyinOutputFormat getHanyuPinyinOutputFormat() {
         return hanyuPinyinOutputFormat;
@@ -40,6 +34,9 @@ public class ChatManager extends PluginBase {
     @Override
     public void onEnable() {
         plugin = this;
+
+        hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
+        hanyuPinyinOutputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
 
         if(!this.getServer().getPluginManager().getPlugins().containsKey("FastJSONLib")){
             //download plugin

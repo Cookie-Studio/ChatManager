@@ -32,7 +32,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPacket(DataPacketReceiveEvent event) throws BadHanyuPinyinOutputFormatCombination {
+    public void onPacket(DataPacketReceiveEvent event){
         Player player=event.getPlayer();
         if(player==null){
             return;
@@ -67,19 +67,27 @@ public class ChatListener implements Listener {
             }
             chatMsg.put(uuid,msg);
 
-            String msgPy = PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
-            //获取玩家输入消息的拼音
-            for(String word:ChatManager.banWords) {
-                String wordPy = PinyinHelper.toHanYuPinyinString(word,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
-                //获取屏蔽词的拼音
-                if(msgPy.contains(wordPy)){//对比
-                    event.getPlayer().sendMessage("msgpy: " + msgPy);
-                    event.getPlayer().sendMessage("banwordpy: " + wordPy);
-                    event.setCancelled();
-                    String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(word));
-                    event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));
-                    return;
+            String msgPy = null;
+            try {
+                msgPy = PinyinHelper.toHanYuPinyinString(msg, ChatManager.plugin.getHanyuPinyinOutputFormat()," ",true);
+
+                //获取玩家输入消息的拼音
+                for(String word:ChatManager.banWords) {
+                    String wordPy = PinyinHelper.toHanYuPinyinString(word,ChatManager.plugin.getHanyuPinyinOutputFormat()," ",true);
+                    //获取屏蔽词的拼音
+                    if(msgPy.contains(wordPy)){//对比
+                        event.getPlayer().sendMessage("msg: " + msg);
+                        event.getPlayer().sendMessage("msgpy: " + msgPy);
+                        event.getPlayer().sendMessage("banword: " + word);
+                        event.getPlayer().sendMessage("banwordpy: " + wordPy);
+                        event.setCancelled();
+                        String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(word));
+                        event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));
+                        return;
+                    }
                 }
+            } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+                badHanyuPinyinOutputFormatCombination.printStackTrace();
             }
         }
     }

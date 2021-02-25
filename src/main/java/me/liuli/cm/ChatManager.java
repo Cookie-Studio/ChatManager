@@ -99,6 +99,10 @@ public class ChatManager extends PluginBase {
         return muteTime;
     }
 
+    public static void mutePlayer(Player player,int time){
+        muteTime.put(player,time);
+    }
+
     private static void registerMuteTask(){
         Server.getInstance().getScheduler().scheduleRepeatingTask(new PluginTask(ChatManager.plugin) {
 

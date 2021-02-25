@@ -4,16 +4,12 @@ import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.network.protocol.TextPacket;
 import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +39,10 @@ public class ChatListener implements Listener {
         }
         //some trash chat plugins ignore event is cancelled
         //so I'll cancel the chat packet
+        if (ChatManager.isPlayerMuted(player)){
+            event.setCancelled();
+            player.sendMessage("you have been muted!");
+        }
         if(event.getPacket() instanceof TextPacket){
             TextPacket packet=(TextPacket) event.getPacket();
 

@@ -67,7 +67,7 @@ public class ChatListener implements Listener {
             }
             chatMsg.put(uuid,msg);
 
-            String msgPy = null;
+            String msgPy;
             try {
                 msgPy = PinyinHelper.toHanYuPinyinString(msg, ChatManager.plugin.getHanyuPinyinOutputFormat()," ",true);
 
@@ -76,10 +76,6 @@ public class ChatListener implements Listener {
                     String wordPy = PinyinHelper.toHanYuPinyinString(word,ChatManager.plugin.getHanyuPinyinOutputFormat()," ",true);
                     //获取屏蔽词的拼音
                     if(msgPy.contains(wordPy)){//对比
-                        event.getPlayer().sendMessage("msg: " + msg);
-                        event.getPlayer().sendMessage("msgpy: " + msgPy);
-                        event.getPlayer().sendMessage("banword: " + word);
-                        event.getPlayer().sendMessage("banwordpy: " + wordPy);
                         event.setCancelled();
                         String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(word));
                         event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));

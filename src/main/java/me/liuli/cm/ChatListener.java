@@ -9,6 +9,7 @@ import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.network.protocol.TextPacket;
 import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +71,8 @@ public class ChatListener implements Listener {
             msg= PinyinHelper.toHanYuPinyinString(msg,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
             for(String words:ChatManager.banWords) {
                 //使用正则表达式进行判断
-                if(Pattern.compile(words).matcher(msg).find()){
+                String wordsPy = PinyinHelper.toHanYuPinyinString(words,ChatManager.plugin.getHanyuPinyinOutputFormat(),"",false);
+                if(Pattern.compile(wordsPy).matcher(msg).find()){
                     event.setCancelled();
                     String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(words));
                     event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));

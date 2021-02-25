@@ -76,7 +76,7 @@ public class ChatListener implements Listener {
                     String wordPy = PinyinHelper.toHanYuPinyinString(word,ChatManager.plugin.getHanyuPinyinOutputFormat()," ",true);
                     //获取屏蔽词的拼音
                     if(msgPy.contains(wordPy)){//对比
-                        event.setCancelled();
+                        event.setCancelled();//TODO: bug:不能正确判别违禁词
                         String prohWord=ChatManager.oriBanWords.get(ChatManager.banWords.indexOf(word));
                         event.getPlayer().sendMessage(ChatManager.bw_warn.replaceAll("%w%",prohWord));
                         return;
